@@ -26,8 +26,8 @@ public class OweCalculator {
         }
 
         // Remove redundancies
-        for (int i = 0; i < people.size(); ++i) {
-            Person p = people.get(i);
+        for (Person p : people) {
+
             for (Debt debt : p.getDebts()) {
 
                 float amountOwed = debt.getAmount();

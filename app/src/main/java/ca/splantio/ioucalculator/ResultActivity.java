@@ -3,6 +3,8 @@ package ca.splantio.ioucalculator;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -28,42 +30,17 @@ public class ResultActivity extends AppCompatActivity {
             people = new ArrayList<>();
         }
 
-        LinearLayout llResults = (LinearLayout) findViewById(R.id.ll_results);
+        RecyclerView recView = (RecyclerView) findViewById(R.id.recv_results);
 
-        for (Person p : people) {
+        // use a linear layout manager
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        recView.setLayoutManager(mLayoutManager);
 
-            View personDebtLayout = LayoutInflater.from(this).inflate(R.layout.layout_debtee, llResults, false);
-            llResults.addView(personDebtLayout);
+        // specify an adapter
+        MyAdapter mAdapter = new MyAdapter(this, people);
+        recView.setAdapter(mAdapter);
 
-            TextView debter = (TextView) personDebtLayout.findViewById(R.id.tv_ower_name);
-            debter.setText(p.getName() + " owes:");
-
-            LinearLayout debts = (LinearLayout) personDebtLayout.findViewById(R.id.ll_debts);
-            Boolean owesAtLeastOnePerson = false;
-            for (Debt debt : p.getDebts()) {
-                if (debt.getAmount() != 0) {
-                    owesAtLeastOnePerson = true;
-                    View debtView = LayoutInflater.from(this).inflate(R.layout.listitem_debt, debts, false);
-                    llResults.addView(debtView);
-
-                    TextView personOwed = (TextView) debtView.findViewById(R.id.tv_owed_to);
-                    personOwed.setText(debt.getPersonOwed().getName());
-                    TextView amountOwed = (TextView) debtView.findViewById(R.id.tv_amount_owed);
-                    amountOwed.setText(formatFloat(debt.getAmount()));
-                }
-            }
-
-            if (!owesAtLeastOnePerson) {
-                debter.setText(p.getName() + " owes nobody");
-            }
-
-
-        }
     }
 
-    public String formatFloat(float pay) {
-        DecimalFormat formatter = new DecimalFormat("#,###.00");
-        return "$"+formatter.format(pay);
-    }
 
 }
